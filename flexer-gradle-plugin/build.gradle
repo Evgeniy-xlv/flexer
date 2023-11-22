@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+}
+
+group = 'c0rnell.flexer.gradle-plugin'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = '8'
+    targetCompatibility = '8'
+}
+
+gradlePlugin {
+    plugins {
+        flexer {
+            id = 'flexer-gradle-plugin'
+            implementationClass = 'c0rnell.flexer.gradle.FlexerGradlePlugin'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+    implementation 'net.bytebuddy:byte-buddy-gradle-plugin:1.14.5'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId = 'c0rnell.flexer'
+            artifactId = 'flexer-gradle-plugin'
+            version = '1.0.0'
+
+            from components.java
+        }
+    }
+}

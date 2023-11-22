@@ -1,0 +1,57 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'c0rnell.flexer:flexer-core:1.0.27'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'flexer-gradle-plugin' version '1.0.0'
+}
+
+group = 'c0rnell.flexer'
+version = '0.0.0'
+
+java {
+    sourceCompatibility = '8'
+    targetCompatibility = '8'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+    mavenLocal()
+}
+
+dependencies {
+    compileOnly 'c0rnell.flexer:flexer-core:1.0.27'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// flexer + lombok setup
+
+compileJava {
+    doFirst {
+        def annlib = buildscript.configurations.classpath
+                .findAll { it.name.matches('^((flexer-core)(.*)*)\\.jar$') }
+                .first()
+        def lombok = configurations.compileClasspath
+                .findAll { it.name.matches('^((lombok)(.*)*)\\.jar$') }
+                .first()
+        System.setProperty('shadow.override.lombok', "$annlib;$lombok")
+    }
+    doLast {
+        System.clearProperty('shadow.override.lombok')
+    }
+}

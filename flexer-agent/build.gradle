@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+}
+
+group = 'c0rnell.flexer'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
+}
+
+jar {
+    // excluding all sources in the package starting with org
+    // it's needed to remove some classes from resulting jar like QueryRewriter
+    // which is used to successfully assemble the library and for nothing else
+    exclude('org')
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Premain-Class"] = "c0rnell.flexer.asm.FlexerInstrumentationAgent"
+        attributes["Agent-Class"] = 'c0rnell.flexer.asm.FlexerInstrumentationAgent'
+        attributes["Can-Redefine-Classes"] = true
+        attributes["Can-Retransform-Classes"] = true
+        attributes["Set-Native-Method-Prefix"] = true
+        attributes["Implementation-Title"] = "ConditionalQueryInstrumentation"
+        attributes["Implementation-Version"] = version
+    }
+    from {
+        configurations.runtimeClasspath
+                .findAll { it.name.endsWith('jar') }
+                .collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+    implementation files("lib/asm-capture-9.1.jar")
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

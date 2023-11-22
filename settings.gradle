@@ -1,1 +1,16 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'flexer'
+
+include 'flexer-agent'
+include 'flexer-core'
+include 'flexer-gradle-plugin'
+include 'flexer-test-project'
+//include 'flexer-test-project-old-lombok'
+
