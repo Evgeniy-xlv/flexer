@@ -56,6 +56,9 @@ public interface MyRepository extends JpaRepository<MyEntity, Long> {
     }
     ```
 2. Add a VM argument
-    ```
-    -javaagent:C:\Users\evgen\IdeaProjects\springtests3\processor\build\libs\processor-0.0.1-SNAPSHOT.jar
+    ```java
+   public static void main(String[] args) {
+        FlexerAttach.attach();
+        // start spring app
+   }
     ```
