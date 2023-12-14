@@ -1,7 +1,7 @@
 package c0rnell.flexer.asm;
 
-import org.jetbrains.capture.org.objectweb.asm.MethodVisitor;
-import org.jetbrains.capture.org.objectweb.asm.commons.AdviceAdapter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.commons.AdviceAdapter;
 
 class AsmMethodAdapter extends AdviceAdapter {
 

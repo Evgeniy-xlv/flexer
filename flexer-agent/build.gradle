@@ -1,13 +1,14 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'c0rnell.flexer'
 version = '1.0.0'
 
 java {
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
+    sourceCompatibility = '8'
+    targetCompatibility = '8'
 }
 
 jar {
@@ -47,9 +48,26 @@ repositories {
 }
 
 dependencies {
-    implementation files("lib/asm-capture-9.1.jar")
+    compileOnly files("../lib/tools.jar")
+    implementation 'org.ow2.asm:asm:9.6'
+    implementation 'org.ow2.asm:asm-commons:9.6'
+
+    implementation 'net.bytebuddy:byte-buddy-agent:1.14.5'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'flexer-agent'
+            version = version
+
+            from components.java
+        }
+    }
+}
+

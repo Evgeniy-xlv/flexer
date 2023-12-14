@@ -1,6 +1,6 @@
 package c0rnell.flexer.asm;
 
-import org.jetbrains.capture.org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.MethodVisitor;
 
 import java.util.function.Consumer;
 

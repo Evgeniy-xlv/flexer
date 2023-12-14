@@ -1,7 +1,7 @@
 package c0rnell.flexer.asm;
 
-import org.jetbrains.capture.org.objectweb.asm.ClassVisitor;
-import org.jetbrains.capture.org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
 
 class AsmClassAdapter extends ClassVisitor {
 
@@ -14,8 +14,10 @@ class AsmClassAdapter extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        if (hook.getMethodName().equals(name) && hook.getMethodDescriptor().equals(descriptor)) {
-            var mv = super.visitMethod(access, name, descriptor, signature, exceptions);
+        String targetMethodName = hook.getMethodName();
+        String targetMethodDesc = hook.getMethodDescriptor();
+        if (targetMethodName.equals(name) && targetMethodDesc.equals(descriptor)) {
+            MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
             return new AsmMethodAdapter(this.api, mv, access, name, descriptor, hook);
         }
         return super.visitMethod(access, name, descriptor, signature, exceptions);

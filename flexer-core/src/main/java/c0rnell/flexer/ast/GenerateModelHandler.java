@@ -1,6 +1,5 @@
 package c0rnell.flexer.ast;
 
-import c0rnell.flexer.ast.JavacAnnotationHandlerUtils;
 import c0rnell.flexer.model.GenerateModel;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.List;
@@ -72,7 +71,7 @@ public class GenerateModelHandler extends JavacAnnotationHandler<GenerateModel> 
         } catch (Throwable e) {
             annotationNode.addError(e.getMessage());
             System.err.println(e.getMessage());
-//            File file = new File("C:\\Users\\evgen\\IdeaProjects\\flexer\\flexer-test-project\\LOMBOK-ERROR-REPORT.txt");
+//            File file = new File("C:\\Users\\evgen\\IdeaProjects\\flexer\\flexer-test-project\\FLEXER-ERROR-REPORT.txt");
 //            if (!file.exists()) {
 //                try {
 //                    file.createNewFile();

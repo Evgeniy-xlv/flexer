@@ -11,10 +11,7 @@ public class TestEntity {
 
     @GenerateModel.Ignore
     private String password;
-//
-//    public TestEntity(Long id, String username, String password) {
-//        this.id = id;
-//        this.username = username;
-//        this.password = password;
-//    }
 }
+
+
+

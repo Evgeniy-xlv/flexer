@@ -1,8 +1,8 @@
 package c0rnell.flexer.asm;
 
-import org.jetbrains.capture.org.objectweb.asm.ClassReader;
-import org.jetbrains.capture.org.objectweb.asm.ClassWriter;
-import org.jetbrains.capture.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 class AsmClassTransformer implements ClassFileTransformer {
 
-    private final Map<String, Hook> instrumentationByClassNameMap;
+    private final Map<String, Hook> hooksByClassNameMap;
 
     public AsmClassTransformer(Collection<Hook> hooks) {
-        this.instrumentationByClassNameMap = hooks.stream()
+        this.hooksByClassNameMap = hooks.stream()
                 .collect(Collectors.toMap(Hook::getClassName, hook -> hook));
     }
 
@@ -26,18 +26,17 @@ class AsmClassTransformer implements ClassFileTransformer {
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) {
 
-        var instrumentation = instrumentationByClassNameMap.get(className);
-        if (instrumentation != null && classBeingRedefined == null) {
+        Hook hook = hooksByClassNameMap.get(className);
+        if (hook != null && classBeingRedefined == null) {
             try {
-                var reader = new ClassReader(classfileBuffer);
-                var writer = new ClassWriter(reader, ClassWriter.COMPUTE_FRAMES);
+                ClassReader reader = new ClassReader(classfileBuffer);
+                ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_FRAMES);
 
-                reader.accept(new AsmClassAdapter(Opcodes.API_VERSION, writer, instrumentation), ClassReader.EXPAND_FRAMES);
+                reader.accept(new AsmClassAdapter(Opcodes.ASM5, writer, hook), ClassReader.EXPAND_FRAMES);
 
                 return writer.toByteArray();
-            }
-            catch (Exception e) {
-                System.out.println("Capture agent: failed to instrument " + className);
+            } catch (Exception e) {
+                System.out.println("Flexer JavaAgent: failed to instrument " + className);
                 e.printStackTrace();
             }
         }

@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'c0rnell.flexer'
-version = '1.0.27'
+version = '1.0.28'
 
 java {
     sourceCompatibility = '8'
@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly files('lib/tools.jar')
+    compileOnly files('../lib/tools.jar')
     compileOnly 'org.kohsuke.metainf-services:metainf-services:1.8'
     annotationProcessor 'org.kohsuke.metainf-services:metainf-services:1.8'
 
